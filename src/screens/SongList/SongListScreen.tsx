@@ -17,21 +17,46 @@ const SongListScreen = ({navigation}: any) => {
   const styles = UseStyles();
   const {theme} = useThemeContext();
   const {songs, fetchSongs, loading}: any = useSongStore();
-  const [query, setQuery] = useState('imagine dragons'); // default
+  const [query, setQuery] = useState('imagine dragons');
   const [refreshing, setRefreshing] = useState(false);
+  const [page, setPage] = useState(0);
+  const [isPaginating, setIsPaginating] = useState(false);
+  const [error, setError] = useState('');
+
+  const LIMIT = 10;
 
   useEffect(() => {
-    fetchSongs(query);
+    fetchSongs(query, 0, LIMIT);
   }, []);
 
   const onSearch = async () => {
-    await fetchSongs(query);
+    const trimmed = query.trim();
+    if (!trimmed) {
+      setError('⚠️ Please enter any keyword to search');
+      return;
+    }
+    setError('');
+    setPage(0);
+    await fetchSongs(trimmed, 0, LIMIT);
   };
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await fetchSongs(query);
+    await fetchSongs(query, 0, LIMIT);
+    setPage(0);
     setRefreshing(false);
+  };
+
+  const loadMore = async () => {
+    if (isPaginating || loading) return;
+
+    const nextOffset = (page + 1) * LIMIT;
+    setIsPaginating(true);
+
+    await fetchSongs(query, nextOffset, LIMIT, true);
+    setPage(prev => prev + 1);
+
+    setIsPaginating(false);
   };
 
   return (
@@ -40,7 +65,10 @@ const SongListScreen = ({navigation}: any) => {
       <View style={styles.searchContainer}>
         <TextInput
           value={query}
-          onChangeText={setQuery}
+          onChangeText={text => {
+            setQuery(text);
+            if (error) setError('');
+          }}
           placeholder="Search artist or song..."
           placeholderTextColor={theme.colors.subtext}
           style={styles.input}
@@ -50,32 +78,44 @@ const SongListScreen = ({navigation}: any) => {
         </TouchableOpacity>
       </View>
 
-      {/* ⏳ Loader */}
-      {loading && (
-        <ActivityIndicator size="large" color={theme.colors.primary} />
-      )}
+      {error ? (
+        <Text style={{color: 'red', textAlign: 'center', marginTop: 6}}>
+          {error}
+        </Text>
+      ) : null}
 
-      {/* ❌ Empty */}
-      {!loading && songs.length === 0 && (
+      {loading && page === 0 ? (
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+      ) : songs.length === 0 ? (
         <Text style={styles.emptyText}>
           No songs found. Try another search!
         </Text>
+      ) : (
+        <FlatList
+          data={songs}
+          keyExtractor={item => item.id}
+          renderItem={({item}) => (
+            <SongCard
+              song={item}
+              onPress={() => navigation.navigate('SongDetail', {song: item})}
+            />
+          )}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          onEndReached={loadMore}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            isPaginating ? (
+              <ActivityIndicator
+                size="small"
+                color={theme.colors.primary}
+                style={{marginVertical: 16}}
+              />
+            ) : null
+          }
+          showsVerticalScrollIndicator={false}
+        />
       )}
-
-      {/* 🎵 Song list */}
-      <FlatList
-        data={songs}
-        keyExtractor={item => item.id}
-        renderItem={({item}) => (
-          <SongCard
-            song={item}
-            onPress={() => navigation.navigate('SongDetail', {song: item})}
-          />
-        )}
-        refreshing={refreshing}
-        onRefresh={onRefresh}
-        showsVerticalScrollIndicator={false}
-      />
     </View>
   );
 };

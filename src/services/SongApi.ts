@@ -1,5 +1,5 @@
 // src/services/SongApi.ts
-export const getSongs = async (query: string = 'ed sheeran') => {
+export const getSongs = async (query: string = 'ed sheeran', offset = 0, limit = 10) => {
     const client_id = '2da6b3d1e2eb408fae5c2aa03671648a';
     const client_secret = 'ed7734b5acf44d248f9df941df6a542b';
 
@@ -14,32 +14,28 @@ export const getSongs = async (query: string = 'ed sheeran') => {
         const tokenData = await tokenRes.json();
         if (!tokenData.access_token) throw new Error('Failed to get token');
 
-        // Step 2: Search for Tracks
+        // Step 2: Search Tracks with offset (pagination)
         const response = await fetch(
-            `https://api.spotify.com/v1/search?q=${encodeURIComponent(
-                query,
-            )}&type=track&limit=10`,
+            `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=${limit}&offset=${offset}`,
             {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${tokenData.access_token}`,
-                },
+                headers: { Authorization: `Bearer ${tokenData.access_token}` },
             },
         );
 
         const data = await response.json();
+        if (!data.tracks?.items) return [];
 
-        // Step 3: Map and return tracks
+        // Step 3: Map and return
         return data.tracks.items.map((item: any) => ({
             id: item.id,
             title: item.name,
             artist: item.artists[0]?.name,
             album: item.album.name,
             thumbnail: item.album.images?.[0]?.url,
-            previewUrl: item.preview_url, // may be null
+            previewUrl: item.preview_url,
         }));
     } catch (error) {
-        console.error('❌ Error fetching Spotify songs:', error);
+        console.error('❌ Spotify fetch error:', error);
         return [];
     }
 };
