@@ -1,0 +1,25 @@
+import React from 'react';
+import {View, Text, Image, TouchableOpacity} from 'react-native';
+import UseStyles from './Style';
+import {downloadFile} from '../../utils/downloadHelper';
+
+const SongCard = ({song, onPress}: any) => {
+  const styles = UseStyles();
+
+  return (
+    <TouchableOpacity style={styles.card} onPress={onPress}>
+      <Image source={{uri: song.thumbnail}} style={styles.thumbnail} />
+      <View style={styles.info}>
+        <Text style={styles.title}>{song.title}</Text>
+        <Text style={styles.artist}>{song.artist}</Text>
+      </View>
+      <TouchableOpacity
+        style={styles.downloadBtn}
+        onPress={() => downloadFile(song.url, song.title)}>
+        <Text style={{color: 'white'}}>⬇️</Text>
+      </TouchableOpacity>
+    </TouchableOpacity>
+  );
+};
+
+export default SongCard;
