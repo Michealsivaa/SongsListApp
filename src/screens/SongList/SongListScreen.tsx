@@ -17,7 +17,7 @@ const SongListScreen = ({navigation}: any) => {
   const styles = UseStyles();
   const {theme} = useThemeContext();
   const {songs, fetchSongs, loading}: any = useSongStore();
-  const [query, setQuery] = useState('imagine dragons');
+  const [query, setQuery] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const [page, setPage] = useState(0);
   const [isPaginating, setIsPaginating] = useState(false);
@@ -26,36 +26,31 @@ const SongListScreen = ({navigation}: any) => {
   const LIMIT = 10;
 
   useEffect(() => {
-    fetchSongs(query, 0, LIMIT);
-  }, []);
+    const delayDebounce = setTimeout(() => {
+      const trimmed = query.trim();
+      if (trimmed.length > 0) {
+        fetchSongs(trimmed, 0, LIMIT);
+        setPage(0);
+        setError('');
+      }
+    }, 500);
 
-  const onSearch = async () => {
-    const trimmed = query.trim();
-    if (!trimmed) {
-      setError('Please enter any keyword to search');
-      return;
-    }
-    setError('');
-    setPage(0);
-    await fetchSongs(trimmed, 0, LIMIT);
-  };
+    return () => clearTimeout(delayDebounce);
+  }, [query]);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await fetchSongs(query, 0, LIMIT);
+    await fetchSongs(query || 'imagine dragons', 0, LIMIT);
     setPage(0);
     setRefreshing(false);
   };
 
   const loadMore = async () => {
     if (isPaginating || loading) return;
-
     const nextOffset = (page + 1) * LIMIT;
     setIsPaginating(true);
-
-    await fetchSongs(query, nextOffset, LIMIT, true);
+    await fetchSongs(query || 'imagine dragons', nextOffset, LIMIT, true);
     setPage(prev => prev + 1);
-
     setIsPaginating(false);
   };
 
@@ -72,19 +67,19 @@ const SongListScreen = ({navigation}: any) => {
           placeholderTextColor={theme.colors.subtext}
           style={styles.input}
         />
-        <TouchableOpacity style={styles.searchBtn} onPress={onSearch}>
+        <TouchableOpacity style={styles.searchBtn}>
           <MaterialIcons name="search" size={22} color="#fff" />
         </TouchableOpacity>
       </View>
 
-      {error ? (
-        <Text style={{color: 'red', textAlign: 'center', marginTop: 6}}>
-          {error}
-        </Text>
-      ) : null}
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
       {loading && page === 0 ? (
-        <ActivityIndicator size="large" color={theme.colors.primary} />
+        <ActivityIndicator
+          size="large"
+          color={theme.colors.primary}
+          style={styles.loader}
+        />
       ) : songs.length === 0 ? (
         <Text style={styles.emptyText}>
           No songs found. Try another search!
@@ -92,7 +87,7 @@ const SongListScreen = ({navigation}: any) => {
       ) : (
         <FlatList
           data={songs}
-          keyExtractor={item => `${item.id}-${item.title}`}
+          keyExtractor={item => item.id}
           renderItem={({item}) => (
             <SongCard
               song={item}
@@ -108,7 +103,7 @@ const SongListScreen = ({navigation}: any) => {
               <ActivityIndicator
                 size="small"
                 color={theme.colors.primary}
-                style={{marginVertical: 16}}
+                style={styles.footerLoader}
               />
             ) : null
           }

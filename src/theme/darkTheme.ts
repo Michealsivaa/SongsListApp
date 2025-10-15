@@ -9,12 +9,14 @@ const darkTheme: AppTheme = {
         subtext: '#AAAAAA',
         primary: '#BB86FC',
         border: '#333333',
+        error: "red"
     },
     spacing: {
         spacer4: 4,
         spacer6: 6,
         spacer8: 8,
         spacer10: 10,
+        spacer12: 12,
         spacer16: 16,
     },
     typography: {
