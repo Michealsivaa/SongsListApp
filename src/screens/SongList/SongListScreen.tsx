@@ -16,8 +16,8 @@ import {useThemeContext} from '../../theme/ThemeContext';
 const SongListScreen = ({navigation}: any) => {
   const styles = UseStyles();
   const {theme} = useThemeContext();
-  const {songs, fetchSongs, loading}: any = useSongStore();
-  const [query, setQuery] = useState('');
+  const {songs, fetchSongs, loading, clearSongs}: any = useSongStore();
+  const [query, setQuery] = useState('Coolie');
   const [refreshing, setRefreshing] = useState(false);
   const [page, setPage] = useState(0);
   const [isPaginating, setIsPaginating] = useState(false);
@@ -54,32 +54,42 @@ const SongListScreen = ({navigation}: any) => {
     setIsPaginating(false);
   };
 
+  const clearSearch = () => {
+    setQuery('');
+    setError('');
+    clearSongs();
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
-        <TextInput
-          value={query}
-          onChangeText={text => {
-            setQuery(text);
-            if (error) setError('');
-          }}
-          placeholder="Search artist or song..."
-          placeholderTextColor={theme.colors.subtext}
-          style={styles.input}
-        />
-        <TouchableOpacity style={styles.searchBtn}>
-          <MaterialIcons name="search" size={22} color="#fff" />
-        </TouchableOpacity>
+        <View style={styles.inputWrapper}>
+          <TextInput
+            value={query}
+            onChangeText={text => {
+              setQuery(text);
+              if (error) setError('');
+            }}
+            placeholder="Search artist or song..."
+            placeholderTextColor={theme.colors.subtext}
+            style={styles.input}
+          />
+          {query.length > 0 && (
+            <TouchableOpacity onPress={clearSearch} style={styles.clearIcon}>
+              <MaterialIcons
+                name="close"
+                size={20}
+                color={theme.colors.subtext}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
 
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
       {loading && page === 0 ? (
-        <ActivityIndicator
-          size="large"
-          color={theme.colors.primary}
-          style={styles.loader}
-        />
+        <ActivityIndicator size="large" color={theme.colors.primary} />
       ) : songs.length === 0 ? (
         <Text style={styles.emptyText}>
           No songs found. Try another search!
@@ -103,7 +113,7 @@ const SongListScreen = ({navigation}: any) => {
               <ActivityIndicator
                 size="small"
                 color={theme.colors.primary}
-                style={styles.footerLoader}
+                style={{marginVertical: 16}}
               />
             ) : null
           }

@@ -5,18 +5,34 @@ export const useSongStore = create((set, get) => ({
     songs: [],
     loading: false,
 
-    fetchSongs: async (query: "", offset = 0, limit = 10, append = false) => {
+    fetchSongs: async (query = '', offset = 0, limit = 10, append = false) => {
+
+        if (!query.trim()) {
+            set({ songs: [], loading: false });
+            return;
+        }
+
         set({ loading: true });
-        const newSongs = await getSongs(query, offset, limit);
 
-        set((state: any) => {
-            let updatedSongs = append ? [...state.songs, ...newSongs] : newSongs;
+        try {
+            const newSongs = await getSongs(query, offset, limit);
 
-            const uniqueSongs = updatedSongs.filter(
-                (song: any, index: any, self: any) => index === self.findIndex((s: any) => s.id === song.id)
-            );
+            set((state: any) => {
+                const updatedSongs = append ? [...state.songs, ...newSongs] : newSongs;
 
-            return { songs: uniqueSongs, loading: false };
-        });
+                const uniqueSongs = updatedSongs.filter(
+                    (song: any, index: number, self: any[]) =>
+                        index === self.findIndex((s: any) => s.id === song.id)
+                );
+
+                return { songs: uniqueSongs, loading: false };
+            });
+        } catch (error) {
+            set({ loading: false });
+        }
+    },
+
+    clearSongs: () => {
+        set({ songs: [] });
     },
 }));

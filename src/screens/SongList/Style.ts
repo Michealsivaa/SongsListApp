@@ -5,21 +5,21 @@ const UseStyles = () => {
     const { theme } = useThemeContext();
 
     return StyleSheet.create({
-        // 🔹 Layout
         container: {
             flex: 1,
             backgroundColor: theme.colors.background,
             padding: theme.spacing.spacer10,
         },
-
-        // 🔹 Search section
         searchContainer: {
             flexDirection: 'row',
             alignItems: 'center',
             marginBottom: theme.spacing.spacer10,
         },
-        input: {
+        inputWrapper: {
             flex: 1,
+            position: 'relative',
+        },
+        input: {
             height: 45,
             borderRadius: 8,
             paddingHorizontal: theme.spacing.spacer10,
@@ -27,7 +27,12 @@ const UseStyles = () => {
             color: theme.colors.text,
             borderWidth: 1,
             borderColor: theme.colors.border,
-            fontSize: 16,
+            paddingRight: 35, // space for clear icon
+        },
+        clearIcon: {
+            position: 'absolute',
+            right: 10,
+            top: 12,
         },
         searchBtn: {
             backgroundColor: theme.colors.primary,
@@ -36,28 +41,16 @@ const UseStyles = () => {
             borderRadius: 8,
             alignItems: 'center',
             justifyContent: 'center',
-            width: 45,
-            height: 45,
-        },
-
-        // 🔹 Error / Empty / Loader
-        errorText: {
-            color: theme.colors.error || 'red',
-            textAlign: 'center',
-            fontSize: 14,
-            marginTop: theme.spacing.spacer8,
         },
         emptyText: {
             color: theme.colors.subtext,
             textAlign: 'center',
-            fontSize: 16,
             marginTop: theme.spacing.spacer16,
         },
-        loader: {
-            marginVertical: theme.spacing.spacer16,
-        },
-        footerLoader: {
-            marginVertical: theme.spacing.spacer12,
+        errorText: {
+            color: 'red',
+            textAlign: 'center',
+            marginTop: 6,
         },
     });
 };
