@@ -7,7 +7,7 @@ const darkTheme: AppTheme = {
         card: '#1E1E1E',
         text: '#FFFFFF',
         subtext: '#AAAAAA',
-        primary: '#BB86FC',
+        primary: '#089239',
         border: '#333333',
         error: "red"
     },

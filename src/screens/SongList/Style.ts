@@ -8,7 +8,7 @@ const UseStyles = () => {
         container: {
             flex: 1,
             backgroundColor: theme.colors.background,
-            padding: theme.spacing.spacer10,
+            padding: theme.spacing.spacer16,
         },
         searchContainer: {
             flexDirection: 'row',

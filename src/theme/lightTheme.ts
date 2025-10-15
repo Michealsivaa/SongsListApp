@@ -7,7 +7,7 @@ const lightTheme: AppTheme = {
         card: '#F3F4F6',
         text: '#000000',
         subtext: '#555555',
-        primary: '#007AFF',
+        primary: '#1ed760',
         border: '#E5E5E5',
         error: 'red'
     },

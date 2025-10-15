@@ -2,9 +2,12 @@ import React from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import UseStyles from './Style';
 import {downloadFile} from '../../utils/downloadHelper';
+import {MaterialIcons} from '@react-native-vector-icons/material-icons';
+import {useThemeContext} from '../../theme/ThemeContext';
 
 const SongCard = ({song, onPress}: any) => {
   const styles = UseStyles();
+  const {theme} = useThemeContext();
 
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
@@ -16,7 +19,7 @@ const SongCard = ({song, onPress}: any) => {
       <TouchableOpacity
         style={styles.downloadBtn}
         onPress={() => downloadFile(song.url, song.title)}>
-        <Text style={{color: 'white'}}>⬇️</Text>
+        <MaterialIcons name="download" size={20} style={styles.downloadIcon} />
       </TouchableOpacity>
     </TouchableOpacity>
   );

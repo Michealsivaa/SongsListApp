@@ -33,8 +33,13 @@ const UseStyles = () => {
         downloadBtn: {
             backgroundColor: theme.colors.primary,
             padding: theme.spacing.spacer6,
-            borderRadius: 6,
+            borderRadius: 50,
+
         },
+        downloadIcon: {
+            color: 'white',
+            opacity: 0.7
+        }
     });
 };
 
