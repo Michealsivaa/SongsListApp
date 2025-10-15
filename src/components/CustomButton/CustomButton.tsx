@@ -7,7 +7,6 @@ import {
   TextStyle,
 } from 'react-native';
 import UseStyles from './Style';
-
 interface Props {
   title: string;
   onPress: () => void;
@@ -15,7 +14,7 @@ interface Props {
   disabled?: boolean;
   style?: ViewStyle;
   textStyle?: TextStyle;
-  icon?: React.ReactNode; // Optional icon (like Material Icon)
+  icon?: React.ReactNode;
 }
 
 const CustomButton: React.FC<Props> = ({

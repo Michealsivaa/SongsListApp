@@ -32,7 +32,7 @@ const SongListScreen = ({navigation}: any) => {
   const onSearch = async () => {
     const trimmed = query.trim();
     if (!trimmed) {
-      setError('⚠️ Please enter any keyword to search');
+      setError('Please enter any keyword to search');
       return;
     }
     setError('');
@@ -61,7 +61,6 @@ const SongListScreen = ({navigation}: any) => {
 
   return (
     <View style={styles.container}>
-      {/* 🔍 Search bar */}
       <View style={styles.searchContainer}>
         <TextInput
           value={query}
@@ -93,7 +92,7 @@ const SongListScreen = ({navigation}: any) => {
       ) : (
         <FlatList
           data={songs}
-          keyExtractor={item => item.id}
+          keyExtractor={item => `${item.id}-${item.title}`}
           renderItem={({item}) => (
             <SongCard
               song={item}
