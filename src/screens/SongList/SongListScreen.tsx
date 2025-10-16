@@ -13,11 +13,17 @@ import SongCard from '../../components/SongCard/SongCard';
 import UseStyles from './Style';
 import {useThemeContext} from '../../theme/ThemeContext';
 
-const SongListScreen = ({navigation}: any) => {
+interface SongListScreenProps {
+  navigation: {
+    navigate: (screen: string, params?: any) => void;
+  };
+}
+
+const SongListScreen: React.FC<SongListScreenProps> = ({navigation}) => {
   const styles = UseStyles();
   const {theme} = useThemeContext();
   const {songs, fetchSongs, loading, clearSongs}: any = useSongStore();
-  const [query, setQuery] = useState('Coolie');
+  const [query, setQuery] = useState('Believer');
   const [refreshing, setRefreshing] = useState(false);
   const [page, setPage] = useState(0);
   const [isPaginating, setIsPaginating] = useState(false);

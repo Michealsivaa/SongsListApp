@@ -27,7 +27,7 @@ const UseStyles = () => {
             color: theme.colors.text,
             borderWidth: 1,
             borderColor: theme.colors.border,
-            paddingRight: 35, // space for clear icon
+            paddingRight: 35,
         },
         clearIcon: {
             position: 'absolute',

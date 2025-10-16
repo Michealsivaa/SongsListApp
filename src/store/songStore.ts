@@ -7,13 +7,18 @@ export interface Song {
     artist: string;
     album: string;
     thumbnail: string;
-    previewUrl?: string | null;
+    previewUrl: string | null;
 }
 
 interface SongStore {
     songs: Song[];
     loading: boolean;
-    fetchSongs: (query: string, offset?: number, limit?: number, append?: boolean) => Promise<void>;
+    fetchSongs: (
+        query: string,
+        offset?: number,
+        limit?: number,
+        append?: boolean
+    ) => Promise<void>;
     clearSongs: () => void;
 }
 
@@ -33,13 +38,20 @@ export const useSongStore = create<SongStore>((set, get) => ({
             const newSongs = await getSongs(query, offset, limit);
 
             set((state) => {
-                const updatedSongs = append ? [...state.songs, ...newSongs] : newSongs;
+
+                const updatedSongs = append
+                    ? [...state.songs, ...newSongs]
+                    : newSongs;
+
                 const uniqueSongs = updatedSongs.filter(
-                    (song: any, index: any, self: any) => index === self.findIndex((s: any) => s.id === song.id)
+                    (song: any, index: any, self: any) =>
+                        index === self.findIndex((s: any) => s.id === song.id)
                 );
+
                 return { songs: uniqueSongs, loading: false };
             });
         } catch (error) {
+            console.error('Error fetching songs:', error);
             set({ loading: false });
         }
     },

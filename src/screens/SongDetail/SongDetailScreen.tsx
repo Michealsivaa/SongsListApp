@@ -5,12 +5,35 @@ import UseStyles from './Style';
 import {downloadFile} from '../../utils/downloadHelper';
 import {useSongStore} from '../../store/songStore';
 
-const SongDetailScreen = ({route, navigation}: any) => {
+interface Song {
+  id: string;
+  title: string;
+  artist: string;
+  album: string;
+  thumbnail: string;
+  previewUrl: string | null;
+}
+
+interface SongDetailScreenProps {
+  route: {
+    params: {
+      song: Song;
+    };
+  };
+  navigation: {
+    replace: (screen: string, params?: any) => void;
+  };
+}
+
+const SongDetailScreen: React.FC<SongDetailScreenProps> = ({
+  route,
+  navigation,
+}) => {
   const {song} = route.params;
   const styles = UseStyles();
-
   const {songs} = useSongStore();
-  const currentIndex = songs.findIndex((item: any) => item.id === song.id);
+
+  const currentIndex = songs.findIndex((item: Song) => item.id === song.id);
 
   const goToSong = (index: number) => {
     if (index >= 0 && index < songs.length) {
@@ -40,8 +63,9 @@ const SongDetailScreen = ({route, navigation}: any) => {
       <TouchableOpacity
         style={styles.downloadBtn}
         onPress={() =>
-          downloadFile(song.previewUrl, song.title, song.thumbnail)
-        }>
+          downloadFile(song.previewUrl ?? null, song.title, song.thumbnail)
+        }
+        activeOpacity={0.8}>
         <MaterialIcons name="download" size={22} color="#fff" />
         <Text style={styles.downloadText}>Download</Text>
       </TouchableOpacity>
