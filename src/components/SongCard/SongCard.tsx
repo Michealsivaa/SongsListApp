@@ -18,7 +18,7 @@ const SongCard = ({song, onPress}: any) => {
       </View>
       <TouchableOpacity
         style={styles.downloadBtn}
-        onPress={() => downloadFile(song.url, song.title)}>
+        onPress={() => downloadFile(song.previewUrl, song.title)}>
         <MaterialIcons name="download" size={20} style={styles.downloadIcon} />
       </TouchableOpacity>
     </TouchableOpacity>

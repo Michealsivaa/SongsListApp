@@ -39,7 +39,9 @@ const SongDetailScreen = ({route, navigation}: any) => {
 
       <TouchableOpacity
         style={styles.downloadBtn}
-        onPress={() => downloadFile(song.thumbnail, song.title)}>
+        onPress={() =>
+          downloadFile(song.previewUrl, song.title, song.thumbnail)
+        }>
         <MaterialIcons name="download" size={22} color="#fff" />
         <Text style={styles.downloadText}>Download</Text>
       </TouchableOpacity>
