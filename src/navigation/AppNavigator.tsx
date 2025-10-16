@@ -13,10 +13,9 @@ const AppNavigator = () => {
   const {isDark, toggleTheme, theme} = useThemeContext();
   const styles = useNavigationStyles();
 
-  // ✅ Dynamically choose logo
   const logoSource = isDark
-    ? require('../assets/icons/songify.png') // dark theme logo
-    : require('../assets/icons/songify-white.png'); // light theme logo
+    ? require('../assets/icons/songify.png')
+    : require('../assets/icons/songify-white.png');
 
   return (
     <Stack.Navigator
@@ -37,7 +36,7 @@ const AppNavigator = () => {
                   styles.titleText,
                   {color: isDark ? theme.colors.text : '#fff'},
                 ]}>
-                Songify
+                Nafify
               </Text>
             </View>
           ),

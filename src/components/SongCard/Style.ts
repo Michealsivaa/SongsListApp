@@ -6,15 +6,15 @@ const UseStyles = () => {
     return StyleSheet.create({
         card: {
             flexDirection: 'row',
-            alignItems: 'center',
+            alignItems: 'flex-start',
             backgroundColor: theme.colors.card,
             marginVertical: theme.spacing.spacer8,
             borderRadius: 10,
             padding: theme.spacing.spacer10,
         },
         thumbnail: {
-            width: 60,
-            height: 60,
+            width: 80,
+            height: 80,
             borderRadius: 8,
         },
         info: {
