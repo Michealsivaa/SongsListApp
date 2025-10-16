@@ -14,8 +14,8 @@ const AppNavigator = () => {
   const styles = useNavigationStyles();
 
   const logoSource = isDark
-    ? require('../assets/icons/songify.png')
-    : require('../assets/icons/songify-white.png');
+    ? require('../assets/icons/nafify-black-logo.png')
+    : require('../assets/icons/nafify-white-logo.png');
 
   return (
     <Stack.Navigator
