@@ -56,7 +56,19 @@ const AppNavigator = () => {
         name="SongDetail"
         component={SongDetailScreen}
         options={{
-          title: 'Song Details',
+          headerBackTitleVisible: false,
+          headerTitleAlign: 'left',
+          headerTitle: () => (
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: '700',
+                color: isDark ? theme.colors.text : '#fff',
+                marginLeft: -22,
+              }}>
+              Song Details
+            </Text>
+          ),
           headerStyle: {
             backgroundColor: isDark ? theme.colors.card : theme.colors.primary,
           },

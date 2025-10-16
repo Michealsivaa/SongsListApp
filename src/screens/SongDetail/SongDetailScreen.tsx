@@ -3,14 +3,24 @@ import {View, Text, Image, TouchableOpacity, SafeAreaView} from 'react-native';
 import {MaterialIcons} from '@react-native-vector-icons/material-icons';
 import UseStyles from './Style';
 import {downloadFile} from '../../utils/downloadHelper';
+import {useSongStore} from '../../store/songStore';
 
-const SongDetailScreen = ({route}: any) => {
+const SongDetailScreen = ({route, navigation}: any) => {
   const {song} = route.params;
   const styles = UseStyles();
 
+  const {songs} = useSongStore();
+  const currentIndex = songs.findIndex((item: any) => item.id === song.id);
+
+  const goToSong = (index: number) => {
+    if (index >= 0 && index < songs.length) {
+      const nextSong = songs[index];
+      navigation.replace('SongDetail', {song: nextSong});
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* 🎵 Thumbnail Banner */}
       <View style={styles.bannerContainer}>
         <Image
           source={{uri: song.thumbnail}}
@@ -19,7 +29,6 @@ const SongDetailScreen = ({route}: any) => {
         />
       </View>
 
-      {/* 🎤 Song Details */}
       <View style={styles.detailsContainer}>
         <Text style={styles.songTitle} numberOfLines={1}>
           {song.title}
@@ -28,7 +37,6 @@ const SongDetailScreen = ({route}: any) => {
         <Text style={styles.albumText}>{song.album}</Text>
       </View>
 
-      {/* ⬇️ Download Button */}
       <TouchableOpacity
         style={styles.downloadBtn}
         onPress={() => downloadFile(song.thumbnail, song.title)}>
@@ -36,9 +44,11 @@ const SongDetailScreen = ({route}: any) => {
         <Text style={styles.downloadText}>Download</Text>
       </TouchableOpacity>
 
-      {/* ⏮️⏯️⏭️ Control Buttons */}
       <View style={styles.controlsContainer}>
-        <TouchableOpacity style={styles.controlBtn}>
+        <TouchableOpacity
+          style={[styles.controlBtn, currentIndex === 0 && styles.disabledBtn]}
+          disabled={currentIndex === 0}
+          onPress={() => goToSong(currentIndex - 1)}>
           <MaterialIcons name="skip-previous" size={36} color="#fff" />
         </TouchableOpacity>
 
@@ -46,7 +56,13 @@ const SongDetailScreen = ({route}: any) => {
           <MaterialIcons name="play-arrow" size={40} color="#fff" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.controlBtn}>
+        <TouchableOpacity
+          style={[
+            styles.controlBtn,
+            currentIndex === songs.length - 1 && styles.disabledBtn,
+          ]}
+          disabled={currentIndex === songs.length - 1}
+          onPress={() => goToSong(currentIndex + 1)}>
           <MaterialIcons name="skip-next" size={36} color="#fff" />
         </TouchableOpacity>
       </View>

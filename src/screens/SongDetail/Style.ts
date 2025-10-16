@@ -89,6 +89,9 @@ const UseStyles = () => {
             backgroundColor: theme.colors.primary,
             elevation: 4,
         },
+        disabledBtn: {
+            opacity: 0.4,
+        },
     });
 };
 
